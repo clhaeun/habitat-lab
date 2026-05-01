@@ -472,6 +472,11 @@ def play_env(env, args, config):
     obs = env.reset()
 
     if not args.no_render:
+        # Restore DISPLAY for pygame (habitat-sim must be started
+        # without DISPLAY so it uses EGL instead of GLX).
+        _pygame_display = os.environ.get("PYGAME_DISPLAY")
+        if _pygame_display:
+            os.environ["DISPLAY"] = _pygame_display
         draw_obs = observations_to_image(obs, {})
         pygame.init()
         screen = pygame.display.set_mode(
